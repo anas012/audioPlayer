@@ -1,0 +1,27 @@
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-flow: row;
+}
+
+.flex-item1 {
+}
+
+.flex-item2 {
+}
+
+.flex-item3 {
+  flex-grow: 1;
+}
+
+.flex-item4 {
+  flex-grow: 40;
+}
+
+.flex-item5 {
+}
+
+.fitem {
+  margin: 1px;
+  padding: 1px;
+}
