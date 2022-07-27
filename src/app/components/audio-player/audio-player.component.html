@@ -1,4 +1,6 @@
-<h3 class="d-flex justify-content-center">Audio Player</h3>
+<h2 class="d-flex justify-content-center bg-success" style="height: 3rem">
+  Audio Player
+</h2>
 <hr />
 
 <p-table [value]="AudioList" responsiveLayout="scroll">
@@ -13,7 +15,11 @@
   <ng-template pTemplate="body" let-AudioList>
     <tr>
       <td>
-        <button (click)="onPlayAudio(AudioList)" class="btn btn-primary">
+        <button (click)="onPlayAudio(AudioList)" class="btn btn-primary"  [ngClass]="
+        AudioList.status == 'pause' || AudioList.status == 'stop'
+          ? 'btn-danger'
+          : 'btn-primary'
+      ">
           <i
             class="fa fa-play-circle"
             *ngIf="AudioList.status == 'stop' || AudioList.status == 'pause'"
@@ -28,17 +34,34 @@
   </ng-template>
 </p-table>
 
-<div class="card w-100" style="position: fixed; bottom: 5px">
-  <p-slider [(ngModel)]="currentTimeS" [min]="0" [max]="durationS"></p-slider>
-  <p>{{ currentTime }}/{{ duration }}</p>
+<div
+  class="card w-100"
+  style="position: fixed; bottom: 5px"
+  [ngClass]="{ hide: event.key == '' }"
+>
+  <p-slider
+    [(ngModel)]="currentTimeS"
+    (onChange)="seekTo(currentTimeS)"
+    [min]="0"
+    [max]="durationS"
+  ></p-slider>
+  <p class="ml-2">{{ currentTime }}/{{ duration }}</p>
   <div class="card-body flex-container">
     <div class="flex-item1 fitem">
-      <button class="btn btn-primary">
+      <button class="btn btn-success" (click)="onBackward()">
         <i class="fa fa-backward" aria-hidden="true"></i>
       </button>
     </div>
     <div class="flex-item2 fitem">
-      <button class="btn btn-primary" (click)="onPlayAudio(event)">
+      <button
+        class="btn"
+        [ngClass]="
+          event.status == 'pause' || event.status == 'stop'
+            ? 'btn-danger'
+            : 'btn-primary'
+        "
+        (click)="onPlayAudio(event)"
+      >
         <i
           class="fa fa-play-circle"
           *ngIf="event.status == 'stop' || event.status == 'pause'"
@@ -47,12 +70,12 @@
       </button>
     </div>
     <div class="flex-item3 fitem">
-      <a class="btn btn-primary">
+      <button class="btn btn-success" (click)="onForward()">
         <i class="fa fa-forward" aria-hidden="true"></i>
-      </a>
+      </button>
     </div>
     <div class="flex-item4 fitem">
-      <p class="mt-1">{{ event.name }}</p>
+      <p class="mt-1 font-weight-bold">{{ event.name }}</p>
     </div>
 
     <div class="flex-item5 fitem"></div>

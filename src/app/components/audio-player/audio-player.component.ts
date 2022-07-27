@@ -13,10 +13,10 @@ export class AudioPlayerComponent implements OnInit {
   volume = 1;
   AudioList = this.utility.files;
   audioObj = new Audio();
-  currentTime: any;
-  duration: any;
-  currentTimeS: any = '0.0';
-  durationS: any = 'No Duration';
+  currentTime: any = '00:00';
+  duration: any = '00:00';
+  currentTimeS: any = '0';
+  durationS: any = '0';
   event: any = {
     name: '',
     status: 'stop',
@@ -76,13 +76,17 @@ export class AudioPlayerComponent implements OnInit {
       this.audioObj.play();
 
       const handler = (event: Event) => {
-        console.log(event);
         this.currentTime = this.formatTime(this.audioObj.currentTime);
         this.duration = this.formatTime(this.audioObj.duration);
         this.durationS = this.convertMinToSec(this.duration);
         this.currentTimeS = this.convertMinToSec(this.currentTime);
         this.currentTimeS = this.currentTimeS * 60;
         this.durationS = this.durationS * 60;
+        if (this.durationS == this.currentTimeS) {
+          this.audioObj.pause();
+          this.audioObj.currentTime = 0;
+          this.event.status = 'stop';
+        }
       };
 
       this.addEvents(this.audioObj, this.audioEvents, handler);
@@ -92,7 +96,6 @@ export class AudioPlayerComponent implements OnInit {
         this.audioObj.currentTime = 0;
         // remove event listeners
         this.removeEvents(this.audioObj, this.audioEvents, handler);
-        // reset state
       };
     });
   }
@@ -102,9 +105,6 @@ export class AudioPlayerComponent implements OnInit {
       obj.addEventListener(event, handler);
     });
   }
-  // onPlayAudio(event: any) {
-  //   this.streamObservable(event.url).subscribe(() => {});
-  // }
 
   private removeEvents(obj: any, events: any, handler: any) {
     events.forEach((event: any) => {
@@ -123,5 +123,16 @@ export class AudioPlayerComponent implements OnInit {
   convertMinToSec(str: string) {
     var newStr = str.replace(/:/g, '.');
     return newStr;
+  }
+
+  onBackward() {
+    this.audioObj.currentTime -= 10;
+  }
+  onForward() {
+    this.audioObj.currentTime += 10;
+  }
+
+  seekTo(seconds: any) {
+    this.audioObj.currentTime = seconds;
   }
 }
